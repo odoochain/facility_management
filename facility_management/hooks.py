@@ -22,7 +22,38 @@ fixtures = [
                     "Expense Claim-pm_property_maintenance",
                     "Material Request-pm_property_maintenance",
                     "Asset Repair-pm_property_maintenance",
-                    "Sales Invoice-pm_tenant_renting"
+                    "Sales Invoice-pm_rental_contract",
+                    "Sales Invoice-pm_property_sb",
+                    "Sales Invoice-pm_property",
+                    "Sales Invoice-pm_tenant",
+                    "Sales Invoice-pm_property_group"
+                ]
+            ]
+        ]
+    },
+    {
+        "doctype": "Property Setter",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Dashboard Chart-type-options"
+                ]
+            ]
+        ]
+    },
+    {
+        "doctype": "Dashboard Chart",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Rental Value",
+                    "Rental Revenue",
+                    "Rental Billing",
+                    "Rental Property Occupancy"
                 ]
             ]
         ]
@@ -40,11 +71,12 @@ fixtures = [
 # web_include_js = "/assets/facility_management/js/facility_management.js"
 
 # include js in page
-# page_js = {"page" : "public/js/file.js"}
+page_js = {"dashboard": "public/js/dashboard.js"}
 
 # include js in doctype views
 doctype_js = {
-    "Sales Invoice": "public/js/scripts/sales_invoice.js"
+    "Sales Invoice": "public/js/scripts/sales_invoice.js",
+    "Payment Entry": "public/js/scripts/payment_entry.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -98,20 +130,19 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+    "Sales Invoice": {
+        "validate": "facility_management.doc_events.sales_invoice.validate",
+    }
+}
 
 # Scheduled Tasks
 # ---------------
 
 scheduler_events = {
     "daily": [
-        "facility_management.events.create_invoice.execute"
+        "facility_management.events.create_invoice.execute",
+        "facility_management.events.cancel_rental_contract.execute"
     ]
 }
 
